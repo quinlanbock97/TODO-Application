@@ -7,6 +7,7 @@ interface ListItem {
     isDone: boolean;
 }
 
+// class that is use to create todo lists
 export class Todo {
     public list: ListItem[];
     public idNumber: number;
