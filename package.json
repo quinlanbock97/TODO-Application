@@ -1,0 +1,21 @@
+{
+  "name": "ts-todo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "todo.ts",
+  "scripts": {
+    "test": "jest --coverage",
+    "start": "node-ts todo.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^12.0.8",
+    "typescript": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.15",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2"
+  }
+}
