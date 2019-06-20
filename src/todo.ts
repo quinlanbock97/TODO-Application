@@ -1,4 +1,11 @@
-﻿// interface that carries attributes about items in the list
+﻿/**
+* Interface that carries attributes about items in the list including;
+* Date Created
+* Description of Task
+* Date to due by
+* Unique ID for the task
+* Whether the task is done or not
+*/
 interface ListItem {
     createdAt: Date;
     description: string;
