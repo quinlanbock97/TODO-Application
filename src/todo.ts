@@ -1,4 +1,5 @@
-﻿interface ListItem {
+﻿// interface that carries attributes about items in the list
+interface ListItem {
     createdAt: Date;
     description: string;
     dueAt: Date;
