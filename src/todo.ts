@@ -1,4 +1,12 @@
-﻿interface ListItem {
+﻿/**
+* Interface that carries attributes about items in the list including;
+* Date Created
+* Description of Task
+* Date to due by
+* Unique ID for the task
+* Whether the task is done or not
+*/
+interface ListItem {
     createdAt: Date;
     description: string;
     dueAt: Date;
@@ -6,6 +14,7 @@
     isDone: boolean;
 }
 
+// class that is use to create todo lists
 export class Todo {
     public list: ListItem[];
     public idNumber: number;
