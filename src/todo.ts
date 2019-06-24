@@ -6,7 +6,7 @@
 * Unique ID for the task
 * Whether the task is done or not
 */
-interface ListItem {
+export interface ListItem {
     createdAt: Date;
     description: string;
     dueAt: Date;
@@ -37,15 +37,23 @@ export class Todo {
             };
             this.idNumber++;
             this.list.push(listItem);
-            return listItem.id;
+            return listItem;
         } else {
             throw new Error("The date entered is not valid.");
         }
     }
 
     // Function to remove an Item given the ID
-    public removeItem(id: number) {
-        this.list = this.list.filter((listItem) => listItem.id !== id);
+    public removeItem(id: number): ListItem {
+        var item: ListItem;
+        const len: number = this.list.length;
+        for (let i = 0; i < len; i++) {
+            if (this.list[i].id == id) {
+                item = this.list[i];
+                this.list.splice(i,1);
+            }
+        }
+        return item;
     }
 
     // Prints out Info on each TODO item
@@ -74,7 +82,6 @@ export class Todo {
     public getCompletedListItems(): number[] {
         const listIDs: number[] = [];
         for (const item of this.list) {
-            const stat = (item.isDone ? "Completed" : " Not completed");
             if (item.isDone) {
                 listIDs.push(item.id);
                 console.log("ID: " + item.id + ", Description: " + item.description);
@@ -87,7 +94,6 @@ export class Todo {
     public getNotCompletedListItems(): number[] {
         const listIDs: number[] = [];
         for (const item of this.list) {
-            const stat = (item.isDone ? "Completed" : " Not completed");
             if (!(item.isDone)) {
                 listIDs.push(item.id);
                 console.log("ID: " + item.id + ", Description: " + item.description);
@@ -104,23 +110,14 @@ export class Todo {
     // Mark as done
     public markDone(id: number): boolean{
         var success = false;
-        for (var i = 0; i < this.list.length; i++) {
-            if(this.list[i].id === id){
+        const len: number = this.list.length;
+        for (let i = 0; i < len; i++) {
+            if (this.list[i].id == id) {
                 this.list[i].isDone = true;
                 success = true;
+                break;
             }
         }
         return success;
-    };
-
-    // Mark as done
-    public remove(id: number): ListItem {
-        for (var i = 0; i < this.list.length; i++) {
-            if(this.list[i].id = id){
-                var item = this.list[i];
-                this.list.splice(i,1);
-                return item;
-            }
-        }
     };
 }
