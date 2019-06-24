@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+// class that is use to create todo lists
 var Todo = /** @class */ (function () {
     function Todo() {
         this.list = [];
@@ -81,6 +82,29 @@ var Todo = /** @class */ (function () {
     Todo.prototype.clear = function () {
         this.list = [];
     };
+    // Mark as done
+    Todo.prototype.markDone = function (id) {
+        var success = false;
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id = id) {
+                this.list[i].isDone = true;
+                success = true;
+            }
+        }
+        return success;
+    };
+    ;
+    // Mark as done
+    Todo.prototype.remove = function (id) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id = id) {
+                var item = this.list[i];
+                this.list.splice(i, 1);
+                return item;
+            }
+        }
+    };
+    ;
     return Todo;
 }());
 exports.Todo = Todo;

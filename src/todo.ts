@@ -100,4 +100,27 @@ export class Todo {
     public clear(): void {
         this.list = [];
     }
+
+    // Mark as done
+    public markDone(id: number): boolean{
+        var success = false;
+        for (var i = 0; i < this.list.length; i++) {
+            if(this.list[i].id = id){
+                this.list[i].isDone = true;
+                success = true;
+            }
+        }
+        return success;
+    };
+    
+    // Mark as done
+    public remove(id: number): ListItem {
+        for (var i = 0; i < this.list.length; i++) {
+            if(this.list[i].id = id){
+                var item = this.list[i];
+                this.list.splice(i,1);
+                return item;
+            }
+        }
+    };
 }
