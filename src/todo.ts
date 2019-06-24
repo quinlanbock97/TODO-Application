@@ -105,14 +105,14 @@ export class Todo {
     public markDone(id: number): boolean{
         var success = false;
         for (var i = 0; i < this.list.length; i++) {
-            if(this.list[i].id = id){
+            if(this.list[i].id === id){
                 this.list[i].isDone = true;
                 success = true;
             }
         }
         return success;
     };
-    
+
     // Mark as done
     public remove(id: number): ListItem {
         for (var i = 0; i < this.list.length; i++) {
