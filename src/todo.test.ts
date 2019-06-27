@@ -36,9 +36,9 @@ describe("addItem function", () => {
     // Is the Added Item in the list
     test("Adds item and looks to see if an item matching the despription is in the list", () => {
         let inList: boolean = false;
-        const len: number = MyTodo.list.length;
+        const len: number = MyTodo.getList().length;
         for (let i = 0; i < len - 1; i++) {
-            if (MyTodo.list[i].description === "Test 4") {
+            if (MyTodo.getList()[i].description === "Test 4") {
                 inList = true;
                 break;
             }
@@ -50,10 +50,10 @@ describe("addItem function", () => {
 describe("removeItem function", () => {
     // test remove item
     test("item is added then removed, then length is checked to be 0", () => {
-        const id: number = MyTodo.addItem("Test 1", "June 1, 2020 09:24:00").id;
-        const len1: number = MyTodo.list.length;
+        const id: number = MyTodo.addItem("Test Remove", "June 1, 2020 09:24:00").id;
+        const len1: number = MyTodo.getList().length;
         MyTodo.removeItem(id);
-        const len2: number = MyTodo.list.length;
+        const len2: number = MyTodo.getList().length;
         expect(len2).toBe(len1 - 1);
     });
 });
@@ -61,18 +61,18 @@ describe("removeItem function", () => {
 describe("change status function", () => {
     // test the changing of isDone
     test("item whose status is false is changed to true and is tested", () => {
-        const id: number = MyTodo.addItem("Test 1", "June 1, 2020 09:24:00").id;
+        const id: number = MyTodo.addItem("Test Change Status", "June 1, 2020 09:24:00").id;
         MyTodo.markDone(id);
-        var marked = false;
-        const len: number = MyTodo.list.length;
+        var marked: Date = undefined;
+        const len: number = MyTodo.getList().length;
         for (let i = 0; i < len; i++) {
-            if (MyTodo.list[i].id == id) {
-                marked = MyTodo.list[i].isDone;
+            if (MyTodo.getList()[i].id == id) {
+                marked = MyTodo.getList()[i].doneAt;
                 break;
             }
         }
         MyTodo.removeItem(id);
-        expect(marked).toBe(true);
+        expect(typeof marked).toBeTruthy();
         
     });
 });
@@ -89,7 +89,7 @@ describe("Listed Items", () => {
     });
 
     // are all compeleted items listed
-    test("checks that all items are listed when function is called", () => {
+    test("checks that compeleted items are listed when function is called", () => {
         const listedIDs: number[] = MyTodo.getNotCompletedListItems();
         let same: boolean = false;
         if (this.notCompletedIDs.sort().join(",") === listedIDs.sort().join(",")) {
@@ -98,8 +98,8 @@ describe("Listed Items", () => {
         expect(same).toBe(true);
     });
 
-    // are all not compelted items listed
-    test("checks that all items are listed when function is called", () => {
+    // are all not compeleted items listed
+    test("checks that not compeleted items are listed when function is called", () => {
         const listedIDs: number[] = MyTodo.getCompletedListItems();
         let same: boolean = false;
         if (this.completedIDs.sort().join(",") === listedIDs.sort().join(",")) {
@@ -112,5 +112,5 @@ describe("Listed Items", () => {
 // does clear function work
 test("clear the list, see if length is zero", () => {
     MyTodo.clear();
-    expect(MyTodo.list.length).toBe(0);
+    expect(MyTodo.getList().length).toBe(0);
 });

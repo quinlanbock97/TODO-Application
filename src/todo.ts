@@ -1,123 +1,151 @@
 ﻿/**
-* Interface that carries attributes about items in the list including;
-* Date Created
-* Description of Task
-* Date to due by
-* Unique ID for the task
-* Whether the task is done or not
+* Function takes in a date object and prints and 
+* formates the objects contents in the console.
+*/
+function printDate(date: Date): void {
+    (date.getMonth() + 1) + "/" +
+    date.getDate() + "/" +
+    date.getFullYear() + " at " +
+    date.getHours() + ":00"
+}
+
+/**
+* Interface that carries attributes about items in the list including:
+* Date Created,
+* Description of Task,
+* Date to due by,
+* Unique ID for the task,
+* Whether the task is done or not.
 */
 export interface ListItem {
     createdAt: Date;
     description: string;
     dueAt: Date;
     id: number;
-    isDone: boolean;
+    doneAt: Date;
 }
 
-// class that is use to create todo lists
+/**
+* Todo is a class that when instantiated creates a todo list where
+* items can be added, checked, and sorted in various ways.
+*/
 export class Todo {
-    public list: ListItem[];
-    public idNumber: number;
+    private list: ListItem[];
+    private idNumber: number;
     constructor() {
         this.list = [];
-        this.idNumber = 0;
+        this.idNumber = 0; // dont need this
     }
 
-    // Function to add items
+    /**
+    * Function allows user to add item to the todo list given
+    * description, date due, and optional boolean if task is 
+    * done.
+    */
     public addItem(des: string, dateString: string, done: boolean = false) {
-        const today = new Date();
+        const today: Date = new Date();
         const dueDate = new Date(dateString);
-        if (dueDate instanceof Date && !isNaN(dueDate.valueOf())) {
-            const listItem = {
+        var listItem: ListItem;
+        if (!(dueDate instanceof Date && !isNaN(dueDate.valueOf()))) {
+            throw new Error("The date entered is not valid.");
+        }
+        if(done === true){
+            listItem = {
                 createdAt: today,
                 description: des,
                 dueAt: dueDate,
                 id: this.idNumber,
-                isDone: done,
+                doneAt: today 
             };
-            this.idNumber++;
-            this.list.push(listItem);
-            return listItem;
-        } else {
-            throw new Error("The date entered is not valid.");
+        }else{
+             listItem = {
+                createdAt: new Date(),
+                description: des,
+                dueAt: dueDate,
+                id: this.idNumber,
+                doneAt: undefined
+            };
         }
+        this.idNumber++;
+        this.list.push(listItem);
+        return listItem;
     }
 
-    // Function to remove an Item given the ID
+    /**
+    * Function that returns an item in the list given
+    * it's ID.
+    */
+    public findItem(search: number): ListItem {
+        return this.list.find(itm => itm.id === search);
+    }
+
+    /**
+    * Function removes an item from the todo list given 
+    * the ID of that item.
+    */
     public removeItem(id: number): ListItem {
-        var item: ListItem;
-        const len: number = this.list.length;
-        for (let i = 0; i < len; i++) {
-            if (this.list[i].id == id) {
-                item = this.list[i];
-                this.list.splice(i,1);
-            }
-        }
+        var item: ListItem = this.findItem(id);
+        this.list.splice(this.list.indexOf(item), 1);
         return item;
     }
 
-    // Prints out Info on each TODO item
+    /**
+     * Prints out infromation for all items in the 
+     * todo list.
+     */ 
     public getListItems(): number[] {
-        const listIDs: number[] = [];
         for (const item of this.list) {
             const stat: string = (item ? "Completed" : " Not completed");
-            listIDs.push(item.id);
             console.log(
                 "ID: " + item.id +
                 ", Description: " + item.description +
-                ", Created Date: " + (item.createdAt.getMonth() + 1) + "/" +
-                                      item.createdAt.getDate() + "/" +
-                                      item.createdAt.getFullYear() + " at " +
-                                      item.createdAt.getHours() + ":00" +
-                ", Due Date: " + (item.dueAt.getMonth() + 1) + "/" +
-                                  item.dueAt.getDate() + "/" +
-                                  item.dueAt.getFullYear() + " at " +
-                                  item.dueAt.getHours() + ":00" +
-                "Status: " + stat);
+                ", Created Date: " + printDate(item.createdAt) +
+                ", Due Date: " + printDate(item.dueAt) +
+                "Status: " + stat
+            );
         }
-        return listIDs;
+        return this.list.map(itm => itm.id);
     }
 
-    // Prints out Info on each TODO item
+    /**
+     * Prints out information on each completed item
+     * in the todo list.
+     */
     public getCompletedListItems(): number[] {
-        const listIDs: number[] = [];
-        for (const item of this.list) {
-            if (item.isDone) {
-                listIDs.push(item.id);
-                console.log("ID: " + item.id + ", Description: " + item.description);
-            }
-        }
-        return listIDs;
+        return (this.list.filter((itm) => itm.doneAt !== undefined)).map(itm => itm.id);
     }
 
-    // Prints out Info on each TODO item
+    /**
+     * Prints out information on each non-completed item
+     * in the todo list.
+     */
     public getNotCompletedListItems(): number[] {
-        const listIDs: number[] = [];
-        for (const item of this.list) {
-            if (!(item.isDone)) {
-                listIDs.push(item.id);
-                console.log("ID: " + item.id + ", Description: " + item.description);
-            }
-        }
-        return listIDs;
+        return (this.list.filter((itm) => itm.doneAt === undefined)).map(itm => itm.id);
     }
 
-    // Clear all TODOs
+    /**
+     * Function to clear the list of all todo items.
+     */
     public clear(): void {
         this.list = [];
     }
 
-    // Mark as done
-    public markDone(id: number): boolean{
-        var success = false;
-        const len: number = this.list.length;
-        for (let i = 0; i < len; i++) {
-            if (this.list[i].id == id) {
-                this.list[i].isDone = true;
-                success = true;
-                break;
-            }
+    /**
+     * Function marks a certian item as done given it's
+     * ID and returns if the operation was successful.
+     */
+    public markDone(id: number) {
+        var item: ListItem = this.findItem(id);
+        if(item === undefined){
+            throw new Error("Item with specified ID does not exist.");
         }
-        return success;
+        item.doneAt = new Date();
     };
+
+    /**
+     * Return the list of todo items.
+     */
+    public getList(): ListItem[]{
+        return this.list;
+    }
 }

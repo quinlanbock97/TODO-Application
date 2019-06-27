@@ -1,41 +1,35 @@
 const express = require('express');
 const todo = require("./src/todo");
+const jsonlint = require("jsonlint");
 const MyTodo = new todo.Todo();
 const app = express();
 const port = 3000;
-
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 app.get('/', function (req, res) {
-    const listDes = [];
-    if (MyTodo.list.length !== 0) {
-        const len = MyTodo.list.length;
-        for (let i = 0; i < len; i++) {
-            listDes.push(MyTodo.list[i].description)
-        }
-        res.json(listDes);
-    } else {
-        res.json('No items in list.');
+    const listTodo = [];
+    for (let i = 0; i < MyTodo.list.length; i++) {
+        listTodo.push(MyTodo.list[i])
     }
+    res.json(listTodo); //list of obejcts not descriptions
 });
 
 app.post('/', function (req, res) {
-    const todoItem = MyTodo.addItem(req.body.Description, req.body.Date, req.body.IsDone);
-    if (req.body.Description !== undefined || req.body.Date !== undefined) {
-        res.json(todoItem);
+    const jsonObject:any = jsonlint.parse(req);
+    if (typeof jsonObject !== 'undefined') {
+        res.json(MyTodo.addItem(jsonObject.Description, jsonObject.Date, jsonObject.IsDone));
     } else {
         res.sendStatus(400);
     }
 });
 
 app.put('/:id/done', function (req, res) {
-    var success = MyTodo.markDone(req.params.id);
-    if (success) {
-        res.sendStatus(200);
-    } else {
-        res.sendStatus(400);
+    try{
+        MyTodo.markDone(req.params.id);
+    }catch{
+        res.sendStatus(404);
     }
 });
 
